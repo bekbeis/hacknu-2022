@@ -21,8 +21,6 @@ async function initMap() {
   await apiLoader.load();
   return new google.maps.Map(mapDiv, mapOptions);
 }
-
-
 function initWebGLOverlayView(map) {  
   let scene, renderer, camera, loader;
   const webGLOverlayView = new google.maps.WebGLOverlayView();
@@ -101,7 +99,52 @@ function initWebGLOverlayView(map) {
   webGLOverlayView.setMap(map);
 }
 
+var snappedCoordinates = [];
+var polylines = [];
+var placeIdArray = [];
+
+// Snap a user-created polyline to roads and draw the snapped path
+function runSnapToRoad(map) {
+  var pathValues = []; 
+  $.get('https://roads.googleapis.com/v1/snapToRoads', {
+    interpolate: true,
+    key: apiOptions.apiKey,
+    path: "-35.278004899930188,149.12958|-35.28032,149.12907|-35.28099,149.12929|-35.2814,149.1298"
+    // path: "51.50843075,-0.098585086|51.50817223,-0.09859787|51.50840261,-0.098512051|51.5086788,-0.09849205|51.50917358,-0.098467999"
+  }, function(data) {
+    console.log(data)
+    processSnapToRoadResponse(data,map);
+    drawSnappedPolyline(map);
+  });
+}
+
+// Store snapped polyline returned by the snap-to-road service.
+function processSnapToRoadResponse(data, map) {
+  snappedCoordinates = [];
+  placeIdArray = [];
+  for (var i = 0; i < data.snappedPoints.length; i++) {
+    var latlng = new google.maps.LatLng(
+        data.snappedPoints[i].location.latitude,
+        data.snappedPoints[i].location.longitude);
+    snappedCoordinates.push(latlng);
+    placeIdArray.push(data.snappedPoints[i].placeId);
+  }
+}
+
+// Draws the snapped polyline (after processing snap-to-road response).
+function drawSnappedPolyline(map) {
+  var snappedPolyline = new google.maps.Polyline({
+    path: snappedCoordinates,
+    strokeColor: '#add8e6',
+    strokeWeight: 4,
+    strokeOpacity: 0.9,
+  });
+  snappedPolyline.setMap(map);
+  polylines.push(snappedPolyline);
+}
+
 (async () => {        
   const map = await initMap();
+  runSnapToRoad(map);
   initWebGLOverlayView(map);    
 })();
