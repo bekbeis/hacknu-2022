@@ -13,14 +13,50 @@ const mapOptions = {
   "zoom": 18,
   "center": { lat: 35.6594945, lng: 139.6999859 },
   "mapId": "ca8e921ae1e995d0"    
-}
-
+};
+  
 async function initMap() {    
   const mapDiv = document.getElementById("map");
   const apiLoader = new Loader(apiOptions);
   await apiLoader.load();
-  return new google.maps.Map(mapDiv, mapOptions);
-}
+  const map = new google.maps.Map(mapDiv, mapOptions);
+
+  const buttons = [
+    ["Rotate Left", "rotate", 20, google.maps.ControlPosition.LEFT_CENTER],
+    ["Rotate Right", "rotate", -20, google.maps.ControlPosition.RIGHT_CENTER],
+    ["Tilt Down", "tilt", 20, google.maps.ControlPosition.TOP_CENTER],
+    ["Tilt Up", "tilt", -20, google.maps.ControlPosition.BOTTOM_CENTER],
+  ];
+
+  buttons.forEach(([text, mode, amount, position]) => {
+    const controlDiv = document.createElement("div");
+    const controlUI = document.createElement("button");
+  
+    controlUI.classList.add("ui-button");
+    controlUI.innerText = `${text}`;
+    controlUI.addEventListener("click", () => {
+      adjustMap(mode, amount);
+    });
+    controlDiv.appendChild(controlUI);
+    map.controls[position].push(controlDiv);
+  });
+
+  const adjustMap = function (mode, amount) {
+    switch (mode) {
+      case "tilt":
+        map.setTilt(map.getTilt() + amount);
+        break;
+      case "rotate":
+        map.setHeading(map.getHeading() + amount);
+        break;
+      default:
+        break;
+    }
+  };
+
+  return map;
+};
+
 function initWebGLOverlayView(map) {  
   let scene, renderer, camera, loader;
   const webGLOverlayView = new google.maps.WebGLOverlayView();
@@ -37,12 +73,12 @@ function initWebGLOverlayView(map) {
   
     // load the model    
     loader = new GLTFLoader();               
-    const source = "pin.gltf";
+    const source = "shiba.glb";
     loader.load(
       source,
       gltf => {      
-        gltf.scene.scale.set(25,25,25);
-        gltf.scene.rotation.x = 180 * Math.PI/180; // rotations are in radians
+        gltf.scene.scale.set(50,50,50);
+        gltf.scene.rotation.x = 90 * Math.PI/180; // rotations are in radians
         scene.add(gltf.scene);           
       }
     );
@@ -84,7 +120,7 @@ function initWebGLOverlayView(map) {
     const latLngAltitudeLiteral = {
         lat: mapOptions.center.lat,
         lng: mapOptions.center.lng,
-        altitude: 120
+        altitude: 50
     }
 
     const matrix = transformer.fromLatLngAltitude(latLngAltitudeLiteral);
