@@ -84,9 +84,8 @@ const sphere = new THREE.Mesh(geometry, material);
         const clips = gltf.animations;
         const clip = THREE.AnimationClip.findByName(clips, "mixamo.com");
         const action = mixer.clipAction(clip);
-        //console.log(clips);
         action.play();
-
+        drawPath(map, data, randcolor);
         scene.add(gltf.scene);
       });
     } else if (activity === "running") {
