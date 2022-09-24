@@ -65,7 +65,7 @@ function initWebGLOverlayView(map) {
     loader.load(
       source,
       gltf => {
-        gltf.scene.scale.set(5,5,5);
+        gltf.scene.scale.set(1,1,1);
         gltf.scene.rotation.x = 90 * Math.PI/180;
         mixer = new THREE.AnimationMixer(gltf.scene);
         const clips = gltf.animations;
@@ -97,16 +97,19 @@ function initWebGLOverlayView(map) {
     altitude: 0
   };
   
-  var t = 0, dt = 0.02,
+  var t = 0, dt = 0.001,
       a = data[0],
-      b = data[4];
+      b = data[1],
+      i = 1;
 
   const ease = (t) => (t<0.5 ? 2*t*t : -1+(4-2*t)*t);
   const lerp = (a,b,t) => (a+(b-a)*t);
   webGLOverlayView.onDraw = ({gl, transformer}) => {
-    var newLat = lerp(a.lat, b.lat, ease(t));
-    var newLng = lerp(a.lng, b.lng, ease(t));
-    var newAlt = lerp(a.alt, b.alt, ease(t));
+
+    var newLat = lerp(a.Latitude, b.Latitude, ease(t));
+    var newLng = lerp(a.Longitude, b.Longitude, ease(t));
+    var newAlt = lerp(a.Altitude, b.Altitude, ease(t));
+
     latLngAltitudeLiteral = {
       lat: newLat,
       lng: newLng,

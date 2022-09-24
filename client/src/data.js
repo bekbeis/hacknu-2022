@@ -1,16 +1,3 @@
-const apiOptions = {
-    apiKey: 'AIzaSyD6Iizn9Jsf5b69Hghc8TJLc1KqK0Z3BX0',
-    version: "beta"
-};
-
-const mapOptions = {
-    "tilt": 0,
-    "heading": 0,
-    "zoom": 18,
-    "center": { lat: 37.8123988, lng: -122.3626517 },
-    "mapId": "ca8e921ae1e995d0"    
-};
-
 const data = [
     {
         "Latitude": 51.50843075,
@@ -133,5 +120,18 @@ const data = [
         "Activity": "walking"
     }
 ];
+
+const apiOptions = {
+    apiKey: 'AIzaSyD6Iizn9Jsf5b69Hghc8TJLc1KqK0Z3BX0',
+    version: "beta"
+};
+
+const mapOptions = {
+    "tilt": 0,
+    "heading": 0,
+    "zoom": 18,
+    "center": { lat: data[0].Latitude, lng: data[0].Longitude },
+    "mapId": "ca8e921ae1e995d0"    
+};
 
 export {apiOptions, mapOptions, data};
