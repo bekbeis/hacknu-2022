@@ -9,6 +9,9 @@
   "author": "Alex Muramoto",
   "license": "Apache 2.0",
   "dependencies": {
+    "@deck.gl/core": "^8.8.11",
+    "@deck.gl/google-maps": "^8.8.0",
+    "@deck.gl/layers": "^8.8.11",
     "@googlemaps/js-api-loader": "^1.13.9",
     "three": "^0.138.3"
   },

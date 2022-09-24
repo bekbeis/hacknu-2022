@@ -14,6 +14,14 @@ const mapOptions = {
   "center": { lat: 35.6594945, lng: 139.6999859 },
   "mapId": "ca8e921ae1e995d0"    
 };
+
+const coordinates = [
+  { lat: 52.37190746, lng: 4.90526689, alt: -1.398195427 },
+  { lat: 52.37143359, lng: 4.904098515, alt: -1.308533509 },
+  { lat: 52.37130446, lng: 4.903811829, alt: -0.011311007 },
+  { lat: 52.37110056, lng: 4.904112411, alt: -0.435420848 },
+  { lat: 52.37088764, lng: 4.904277296, alt: 0.847999422 }
+];
   
 async function initMap() {    
   const mapDiv = document.getElementById("map");
@@ -57,12 +65,10 @@ async function initMap() {
   return map;
 };
 
-
-
-
-
-
 function initWebGLOverlayView(map) {  
+  let mixer;
+  const clock = new THREE.Clock();
+
   let scene, renderer, camera, loader;
   const webGLOverlayView = new google.maps.WebGLOverlayView();
   
@@ -77,17 +83,31 @@ function initWebGLOverlayView(map) {
     scene.add(directionalLight);
   
     // load the model    
-    loader = new GLTFLoader();               
-    const source = "shiba.glb";
+    loader = new GLTFLoader();        
+    const source = "stegosaurs_SStenops.glb";
     loader.load(
       source,
       gltf => {      
-        gltf.scene.scale.set(50,50,50);
+        gltf.scene.scale.set(10,10,10);
         gltf.scene.rotation.x = 90 * Math.PI/180; // rotations are in radians
-        scene.add(gltf.scene);           
+                 
+        
+        mixer = new THREE.AnimationMixer(gltf.scene);
+        const clips = gltf.animations;
+        const clip = THREE.AnimationClip.findByName(clips, 'walk1');
+        const action = mixer.clipAction(clip);
+        action.play();
+
+        scene.add(gltf.scene);  
       }
     );
   }
+
+  // const animate = () => {
+  //   if (mixer)
+  //     mixer.update(clock.getDelta());
+  //   renderer.render(scene, camera);
+  // }
   
   webGLOverlayView.onContextRestored = ({gl}) => {    
     // create the three.js renderer, using the
@@ -102,20 +122,20 @@ function initWebGLOverlayView(map) {
     // wait to move the camera until the 3D model loads    
     loader.manager.onLoad = () => {        
       renderer.setAnimationLoop(() => {
-        map.moveCamera({
-          "tilt": mapOptions.tilt,
-          "heading": mapOptions.heading,
-          "zoom": mapOptions.zoom
-        });            
+        // map.moveCamera({
+        //   "tilt": mapOptions.tilt,
+        //   "heading": mapOptions.heading,
+        //   "zoom": mapOptions.zoom
+        // });      
         
-        // rotate the map 360 degrees 
-        if (mapOptions.tilt < 67.5) {
-          mapOptions.tilt += 0.5
-        } else if (mapOptions.heading <= 360) {
-          mapOptions.heading += 0.2;
-        } else {
-          renderer.setAnimationLoop(null)
-        }
+        // // rotate the map 360 degrees 
+        // if (mapOptions.tilt < 67.5) {
+        //   mapOptions.tilt += 0.5
+        // } else if (mapOptions.heading <= 360) {
+        //   mapOptions.heading += 0.2;
+        // } else {
+        //   renderer.setAnimationLoop(null)
+        // }
       });        
     }
   }
@@ -125,12 +145,15 @@ function initWebGLOverlayView(map) {
     const latLngAltitudeLiteral = {
         lat: mapOptions.center.lat,
         lng: mapOptions.center.lng,
-        altitude: 50
+        altitude: 10
     }
 
     const matrix = transformer.fromLatLngAltitude(latLngAltitudeLiteral);
     camera.projectionMatrix = new THREE.Matrix4().fromArray(matrix);
     
+    if (mixer)
+      mixer.update(clock.getDelta());
+
     webGLOverlayView.requestRedraw();      
     renderer.render(scene, camera);                  
 
@@ -142,5 +165,5 @@ function initWebGLOverlayView(map) {
 
 (async () => {        
   const map = await initMap();
-  initWebGLOverlayView(map);    
+  initWebGLOverlayView(map);
 })();
