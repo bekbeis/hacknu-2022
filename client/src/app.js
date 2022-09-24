@@ -2,7 +2,7 @@ import { Loader } from '@googlemaps/js-api-loader';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {apiOptions, mapOptions, data} from './data.js';
-
+import {drawPath} from './path.js'
 async function initMap() {    
   const mapDiv = document.getElementById("map");
   const apiLoader = new Loader(apiOptions);
@@ -44,10 +44,13 @@ async function initMap() {
 };
 
 function initWebGLOverlayView(map) {  
-  let scene, renderer, camera, loader, mixer;
+  let scene, renderer, camera, loader, mixer, randcolor;
   const clock = new THREE.Clock();
   const webGLOverlayView = new google.maps.WebGLOverlayView();
-  
+  function random_rgba() {
+    var o = Math.round, r = Math.random, s = 255;
+    return 'rgb(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ')';
+}
   webGLOverlayView.onAdd = () => {   
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera();
@@ -56,7 +59,7 @@ function initWebGLOverlayView(map) {
     const directionalLight = new THREE.DirectionalLight(0xffffff, 0.25);
     directionalLight.position.set(0.5, -1, 0.5);
     scene.add(directionalLight);
-      
+    randcolor = random_rgba();
     loader = new GLTFLoader();        
     const source = "stegosaurs_SStenops.glb";
     loader.load(
@@ -68,6 +71,7 @@ function initWebGLOverlayView(map) {
         const clips = gltf.animations;
         const clip = THREE.AnimationClip.findByName(clips, 'walk1');
         const action = mixer.clipAction(clip);
+        drawPath(5, map, data, scene, randcolor);
         action.play();
         scene.add(gltf.scene);  
       }
@@ -99,7 +103,6 @@ function initWebGLOverlayView(map) {
 
   const ease = (t) => (t<0.5 ? 2*t*t : -1+(4-2*t)*t);
   const lerp = (a,b,t) => (a+(b-a)*t);
-
   webGLOverlayView.onDraw = ({gl, transformer}) => {
     var newLat = lerp(a.lat, b.lat, ease(t));
     var newLng = lerp(a.lng, b.lng, ease(t));
@@ -118,7 +121,6 @@ function initWebGLOverlayView(map) {
     
     if (mixer)
       mixer.update(clock.getDelta());
-      
     webGLOverlayView.requestRedraw();     
     renderer.render(scene, camera);
     renderer.resetState();
