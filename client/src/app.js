@@ -65,7 +65,7 @@ function initWebGLOverlayView(map) {
     loader.load(
       source,
       gltf => {
-        gltf.scene.scale.set(1,1,1);
+        gltf.scene.scale.set(10,10,10);
         gltf.scene.rotation.x = 90 * Math.PI/180;
         mixer = new THREE.AnimationMixer(gltf.scene);
         const clips = gltf.animations;
