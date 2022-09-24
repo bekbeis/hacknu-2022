@@ -5,7 +5,7 @@ function drawPath(map, coordinates, color) {
         path.push({lat: coordinates[i].Latitude, lng: coordinates[i].Longitude, alt: coordinates[i].Altitude})
     }
     for (let i = 0; i < coordinates.length-1; i++) {
-        drawSpeed.push(Math.abs(coordinates[i+1].Timestamp - coordinates[i].Timestamp)/800);
+        drawSpeed.push(Math.abs(coordinates[i+1].Timestamp - coordinates[i].Timestamp)/100);
     }
     const flightPath = new google.maps.Polyline({
         path: path,
@@ -39,10 +39,10 @@ function animatePolyline(line, map, path, drawSpeedArr) {
             }, pauseLineRemove);
  
             //delay the drawing of the next animated line
-            setTimeout(function () {
-                pause = false;
-                i = 0;
-            }, pauseRedrawLine + pauseLineRemove);
+            // setTimeout(function () {
+            //     pause = false;
+            //     i = 0;
+            // }, pauseRedrawLine + pauseLineRemove);
         }
  
         //create a line part between the current and next coordinate

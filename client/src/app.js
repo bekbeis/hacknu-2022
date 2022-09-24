@@ -172,10 +172,11 @@ scene.add(gltf.scene);
     altitude: 0
   };
   
-  var t = 0, dt = 0.001,
-      a = data[0],
-      b = data[1],
-      i = 1;
+  var i = 1;
+  var t = 0, dt = 0.02,
+      a = data[i-1], 
+      b = data[i];
+  var newLat, newLng, newAlt;
 
   const ease = (t) => (t<0.5 ? 2*t*t : -1+(4-2*t)*t);
   const lerp = (a,b,t) => (a+(b-a)*t);
@@ -191,14 +192,34 @@ scene.add(gltf.scene);
     var newLng = lerp(a.Longitude, b.Longitude, ease(t));
     var newAlt = lerp(a.Altitude, b.Altitude, ease(t));
 
+    if (i < data.length) {
+      newLat = lerp(a.Latitude, b.Latitude, ease(t));
+      newLng = lerp(a.Longitude, b.Longitude, ease(t));
+      newAlt = lerp(a.Altitude, b.Altitude, ease(t));
+
+      t += dt;
+    }
+    
+    if ((newLat == b.Latitude) || (newLng == b.Longitude) || (newAlt == b.Altitude)) {
+      if (i < data.length - 1) {
+        i++;
+        t = 0;
+        a = data[i-1];
+        b = data[i];
+      }
+    }
+
+    if ((newLat == data[data.length-1].Latitude)
+    || (newLng == data[data.length-1].Longitude)
+    || (newAlt == data[data.length-1].Altitude)) {
+      i++;
+    }
+
     latLngAltitudeLiteral = {
       lat: newLat,
       lng: newLng,
       altitude: newAlt
-    };
-    t += dt;
-    if (t <= 0 || t >= 1)
-        dt = -dt;
+    };      
 
     const matrix = transformer.fromLatLngAltitude(latLngAltitudeLiteral);
     camera.projectionMatrix = new THREE.Matrix4().fromArray(matrix);
