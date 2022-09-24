@@ -71,7 +71,7 @@ function initWebGLOverlayView(map) {
         const clips = gltf.animations;
         const clip = THREE.AnimationClip.findByName(clips, 'walk1');
         const action = mixer.clipAction(clip);
-        drawPath(5, map, data, scene, randcolor);
+        drawPath(map, data, randcolor);
         action.play();
         scene.add(gltf.scene);  
       }
