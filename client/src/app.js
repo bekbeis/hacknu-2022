@@ -102,12 +102,6 @@ function initWebGLOverlayView(map) {
       }
     );
   }
-
-  // const animate = () => {
-  //   if (mixer)
-  //     mixer.update(clock.getDelta());
-  //   renderer.render(scene, camera);
-  // }
   
   webGLOverlayView.onContextRestored = ({gl}) => {    
     // create the three.js renderer, using the
