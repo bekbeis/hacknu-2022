@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {apiOptions, mapOptions, data} from './data.js';
 import {drawPath} from './path.js'
+var index = 0;
 async function initMap() {    
   const mapDiv = document.getElementById("map");
   const apiLoader = new Loader(apiOptions);
@@ -76,8 +77,8 @@ const sphere = new THREE.Mesh(geometry, material);
     scene.add(sphere);
 
     camera.lookAt(sphere.position); 
-    activity = data[0].Activity;
-    drawPath(map, data, randcolor);
+    activity = data[index][0].Activity;
+    drawPath(map, data[index], randcolor);
     if (activity === "walking" || null) {
       loader = new GLTFLoader();
       const source = "./models/girl__character_walk.glb";
@@ -184,22 +185,22 @@ const sphere = new THREE.Mesh(geometry, material);
   var i = 1;
   let counter = 0;
   var t = 0, dt = 0.02,
-      a = data[i-1], 
-      b = data[i];
+      a = data[index][i-1], 
+      b = data[index][i];
   var newLat, newLng, newAlt;
 
   const ease = (t) => (t<0.5 ? 2*t*t : -1+(4-2*t)*t);
   const lerp = (a,b,t) => (a+(b-a)*t);
 
   webGLOverlayView.onDraw = ({gl, transformer}) => {
-    if (data.length == 1) {
+    if (data[index].length == 1) {
       latLngAltitudeLiteral = {
-        lat: data[0].Latitude,
-        lng: data[0].Longitude,
-        altitude: data[0].Altitude
+        lat: data[index][0].Latitude,
+        lng: data[index][0].Longitude,
+        altitude: data[index][0].Altitude
       };
     } else {
-      if (i < data.length) {
+      if (i < data[index].length) {
         newLat = lerp(a.Latitude, b.Latitude, ease(t));
         newLng = lerp(a.Longitude, b.Longitude, ease(t));
         newAlt = lerp(a.Altitude, b.Altitude, ease(t));
@@ -208,23 +209,23 @@ const sphere = new THREE.Mesh(geometry, material);
       }
       
       if ((newLat == b.Latitude) || (newLng == b.Longitude) || (newAlt == b.Altitude)) {
-        if (i < data.length - 1) {
+        if (i < data[index].length - 1) {
           i++;
           t = 0;
-          a = data[i-1];
-          b = data[i];
+          a = data[index][i-1];
+          b = data[index][i];
   
           sphere.scale.set(
-            (sphere.scale.x = data[counter].Horizontal_Accuracy),
-            (sphere.scale.y = data[counter].Vertical_Accuracy),
-            (sphere.scale.z = data[counter].Horizontal_Accuracy)
+            (sphere.scale.x = data[index][counter].Horizontal_Accuracy),
+            (sphere.scale.y = data[index][counter].Vertical_Accuracy),
+            (sphere.scale.z = data[index][counter].Horizontal_Accuracy)
           );
         }
       }
   
-      if ((newLat == data[data.length-1].Latitude)
-      || (newLng == data[data.length-1].Longitude)
-      || (newAlt == data[data.length-1].Altitude)) {
+      if ((newLat == data[index][data[index].length-1].Latitude)
+      || (newLng == data[index][data[index].length-1].Longitude)
+      || (newAlt == data[index][data[index].length-1].Altitude)) {
         i++;
       }
   
@@ -241,8 +242,8 @@ const sphere = new THREE.Mesh(geometry, material);
     if (mixer)
       mixer.update(clock.getDelta());
 
-    activity = data[counter].Activity;   
-    if (counter<data.length-1) counter++;
+    activity = data[index][counter].Activity;   
+    if (counter<data[index].length-1) counter++;
     else counter = 0;
     
     webGLOverlayView.requestRedraw();  
