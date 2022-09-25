@@ -1,27 +1,27 @@
-// const data = [
-//     {"Latitude":51.5084307498856,
-//     "Longitude":-0.0985850860961545,
-//     "Altitude":0.65811756308103,
-//     "Identifier":"Alice",
-//     "Timestamp":210541,
-//     "Floor_Label":"null",
-//     "Horizontal_Accuracy":2.3764,
-//     "Vertical_Accuracy":5.484818,
-//     "Confidence_In_Location_Accuracy":0.6827,
-//     "Activity":"walking"
-//     },
-//     {"Latitude":51.5081722295039,
-//     "Longitude":-0.0985978698818246,
-//     "Altitude":0.18460057895524,
-//     "Identifier":"Alice",
-//     "Timestamp":271786,
-//     "Floor_Label":"null",
-//     "Horizontal_Accuracy":2.8573,
-//     "Vertical_Accuracy":5.18274,
-//     "Confidence_In_Location_Accuracy":0.6827,
-//     "Activity":"walking"
-//     },
-//     {"Latitude":51.5084026106553,"Longitude":-0.098512050934636,"Altitude":1.11890095321305,"Identifier":"Alice","Timestamp":346999,"Floor_Label":"null","Horizontal_Accuracy":2.9853,"Vertical_Accuracy":5.4228294,"Confidence_In_Location_Accuracy":0.6827,"Activity":"walking"},{"Latitude":51.5086787981714,"Longitude":-0.0984920497122077,"Altitude":6.84008048192768,"Identifier":"Alice","Timestamp":412323,"Floor_Label":"null","Horizontal_Accuracy":2.55035,"Vertical_Accuracy":2.325053,"Confidence_In_Location_Accuracy":0.6827,"Activity":"walking"},{"Latitude":51.5091735759613,"Longitude":-0.0984679986576197,"Altitude":6.8198559137089,"Identifier":"Alice","Timestamp":496645,"Floor_Label":"null","Horizontal_Accuracy":2.98437,"Vertical_Accuracy":5.13931,"Confidence_In_Location_Accuracy":0.6827,"Activity":"walking"},{"Latitude":51.5095937834761,"Longitude":-0.0984240991632801,"Altitude":6.81997951790538,"Identifier":"Alice","Timestamp":556118,"Floor_Label":"null","Horizontal_Accuracy":3.292342,"Vertical_Accuracy":5.420242,"Confidence_In_Location_Accuracy":0.6827,"Activity":"walking"},{"Latitude":51.510087671925,"Longitude":-0.0983794103700441,"Altitude":7.17710718071825,"Identifier":"Alice","Timestamp":616721,"Floor_Label":"null","Horizontal_Accuracy":2.45881,"Vertical_Accuracy":4.92494,"Confidence_In_Location_Accuracy":0.6827,"Activity":"walking"},{"Latitude":51.51052554748,"Longitude":-0.0983531343389532,"Altitude":7.1412686889752,"Identifier":"Alice","Timestamp":691282,"Floor_Label":"null","Horizontal_Accuracy":2.443,"Vertical_Accuracy":3.450505,"Confidence_In_Location_Accuracy":0.6827,"Activity":"walking"},{"Latitude":51.5108549650061,"Longitude":-0.0984162651626019,"Altitude":0.20171483400944,"Identifier":"Alice","Timestamp":765795,"Floor_Label":"null","Horizontal_Accuracy":2.91781,"Vertical_Accuracy":4.30202,"Confidence_In_Location_Accuracy":0.6827,"Activity":"walking"},{"Latitude":51.5111606123825,"Longitude":-0.0983944360105759,"Altitude":0.2341160768048,"Identifier":"Alice","Timestamp":834246,"Floor_Label":"null","Horizontal_Accuracy":3.928974,"Vertical_Accuracy":3.204045,"Confidence_In_Location_Accuracy":0.6827,"Activity":"walking"}];
+const data = [
+    {"Latitude":51.5084307498856,
+    "Longitude":-0.0985850860961545,
+    "Altitude":0.65811756308103,
+    "Identifier":"Alice",
+    "Timestamp":210541,
+    "Floor_Label":"null",
+    "Horizontal_Accuracy":2.3764,
+    "Vertical_Accuracy":5.484818,
+    "Confidence_In_Location_Accuracy":0.6827,
+    "Activity":"walking"
+    },
+    {"Latitude":51.5081722295039,
+    "Longitude":-0.0985978698818246,
+    "Altitude":0.18460057895524,
+    "Identifier":"Alice",
+    "Timestamp":271786,
+    "Floor_Label":"null",
+    "Horizontal_Accuracy":2.8573,
+    "Vertical_Accuracy":5.18274,
+    "Confidence_In_Location_Accuracy":0.6827,
+    "Activity":"walking"
+    },
+    {"Latitude":51.5084026106553,"Longitude":-0.098512050934636,"Altitude":1.11890095321305,"Identifier":"Alice","Timestamp":346999,"Floor_Label":"null","Horizontal_Accuracy":2.9853,"Vertical_Accuracy":5.4228294,"Confidence_In_Location_Accuracy":0.6827,"Activity":"walking"},{"Latitude":51.5086787981714,"Longitude":-0.0984920497122077,"Altitude":6.84008048192768,"Identifier":"Alice","Timestamp":412323,"Floor_Label":"null","Horizontal_Accuracy":2.55035,"Vertical_Accuracy":2.325053,"Confidence_In_Location_Accuracy":0.6827,"Activity":"walking"},{"Latitude":51.5091735759613,"Longitude":-0.0984679986576197,"Altitude":6.8198559137089,"Identifier":"Alice","Timestamp":496645,"Floor_Label":"null","Horizontal_Accuracy":2.98437,"Vertical_Accuracy":5.13931,"Confidence_In_Location_Accuracy":0.6827,"Activity":"walking"},{"Latitude":51.5095937834761,"Longitude":-0.0984240991632801,"Altitude":6.81997951790538,"Identifier":"Alice","Timestamp":556118,"Floor_Label":"null","Horizontal_Accuracy":3.292342,"Vertical_Accuracy":5.420242,"Confidence_In_Location_Accuracy":0.6827,"Activity":"walking"},{"Latitude":51.510087671925,"Longitude":-0.0983794103700441,"Altitude":7.17710718071825,"Identifier":"Alice","Timestamp":616721,"Floor_Label":"null","Horizontal_Accuracy":2.45881,"Vertical_Accuracy":4.92494,"Confidence_In_Location_Accuracy":0.6827,"Activity":"walking"},{"Latitude":51.51052554748,"Longitude":-0.0983531343389532,"Altitude":7.1412686889752,"Identifier":"Alice","Timestamp":691282,"Floor_Label":"null","Horizontal_Accuracy":2.443,"Vertical_Accuracy":3.450505,"Confidence_In_Location_Accuracy":0.6827,"Activity":"walking"},{"Latitude":51.5108549650061,"Longitude":-0.0984162651626019,"Altitude":0.20171483400944,"Identifier":"Alice","Timestamp":765795,"Floor_Label":"null","Horizontal_Accuracy":2.91781,"Vertical_Accuracy":4.30202,"Confidence_In_Location_Accuracy":0.6827,"Activity":"walking"},{"Latitude":51.5111606123825,"Longitude":-0.0983944360105759,"Altitude":0.2341160768048,"Identifier":"Alice","Timestamp":834246,"Floor_Label":"null","Horizontal_Accuracy":3.928974,"Vertical_Accuracy":3.204045,"Confidence_In_Location_Accuracy":0.6827,"Activity":"walking"}];
 
 // const data = [
 //     {
