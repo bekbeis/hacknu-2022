@@ -65,7 +65,7 @@ function initWebGLOverlayView(map) {
     loader.load(
       source,
       gltf => {
-        gltf.scene.scale.set(10,10,10);
+        gltf.scene.scale.set(5,5,5);
         gltf.scene.rotation.x = 90 * Math.PI/180;
         mixer = new THREE.AnimationMixer(gltf.scene);
         const clips = gltf.animations;
@@ -105,36 +105,44 @@ function initWebGLOverlayView(map) {
 
   const ease = (t) => (t<0.5 ? 2*t*t : -1+(4-2*t)*t);
   const lerp = (a,b,t) => (a+(b-a)*t);
+
   webGLOverlayView.onDraw = ({gl, transformer}) => {
-
-    if (i < data.length) {
-      newLat = lerp(a.Latitude, b.Latitude, ease(t));
-      newLng = lerp(a.Longitude, b.Longitude, ease(t));
-      newAlt = lerp(a.Altitude, b.Altitude, ease(t));
-
-      t += dt;
-    }
-    
-    if ((newLat == b.Latitude) || (newLng == b.Longitude) || (newAlt == b.Altitude)) {
-      if (i < data.length - 1) {
-        i++;
-        t = 0;
-        a = data[i-1];
-        b = data[i];
+    if (data.length == 1) {
+      latLngAltitudeLiteral = {
+        lat: data[0].Latitude,
+        lng: data[0].Longitude,
+        altitude: data[0].Altitude
+      };
+    } else {
+      if (i < data.length) {
+        newLat = lerp(a.Latitude, b.Latitude, ease(t));
+        newLng = lerp(a.Longitude, b.Longitude, ease(t));
+        newAlt = lerp(a.Altitude, b.Altitude, ease(t));
+  
+        t += dt;
       }
-    }
-
-    if ((newLat == data[data.length-1].Latitude)
-    || (newLng == data[data.length-1].Longitude)
-    || (newAlt == data[data.length-1].Altitude)) {
-      i++;
-    }
-
-    latLngAltitudeLiteral = {
-      lat: newLat,
-      lng: newLng,
-      altitude: newAlt
-    };      
+      
+      if ((newLat == b.Latitude) || (newLng == b.Longitude) || (newAlt == b.Altitude)) {
+        if (i < data.length - 1) {
+          i++;
+          t = 0;
+          a = data[i-1];
+          b = data[i];
+        }
+      }
+  
+      if ((newLat == data[data.length-1].Latitude)
+      || (newLng == data[data.length-1].Longitude)
+      || (newAlt == data[data.length-1].Altitude)) {
+        i++;
+      }
+  
+      latLngAltitudeLiteral = {
+        lat: newLat,
+        lng: newLng,
+        altitude: newAlt
+      };
+    }      
 
     const matrix = transformer.fromLatLngAltitude(latLngAltitudeLiteral);
     camera.projectionMatrix = new THREE.Matrix4().fromArray(matrix);
