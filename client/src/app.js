@@ -51,32 +51,106 @@ function initWebGLOverlayView(map) {
     var o = Math.round, r = Math.random, s = 255;
     return 'rgb(' + o(r()*s) + ',' + o(r()*s) + ',' + o(r()*s) + ')';
 }
+//making sphere
+var geometry = new THREE.SphereGeometry(1, 32, 16);
+
+const material = new THREE.MeshPhongMaterial({
+  color: 0xffff00,
+  opacity: 0.5,
+  transparent: true,
+});
+const sphere = new THREE.Mesh(geometry, material);
+// -------------
   webGLOverlayView.onAdd = () => {   
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera();
-    const ambientLight = new THREE.AmbientLight( 0xffffff, 0.75 ); // soft white light
+    const ambientLight = new THREE.AmbientLight( 0xffffff, 2 ); // soft white light
     scene.add(ambientLight);
     const directionalLight = new THREE.DirectionalLight(0xffffff, 0.25);
     directionalLight.position.set(0.5, -1, 0.5);
     scene.add(directionalLight);
     randcolor = random_rgba();
-    loader = new GLTFLoader();        
-    const source = "stegosaurs_SStenops.glb";
-    loader.load(
-      source,
-      gltf => {
-        gltf.scene.scale.set(5,5,5);
-        gltf.scene.rotation.x = 90 * Math.PI/180;
+
+     // load the model
+    var activity = "walking";
+    if (activity === "walking" || null) {
+      loader = new GLTFLoader();
+      const source = "./models/girl__character_walk.glb";
+      loader.load(source, (gltf) => {
+        gltf.scene.scale.set(5, 5, 5);
+        gltf.scene.rotation.x = (90 * Math.PI) / 180; // rotations are in radians
+
         mixer = new THREE.AnimationMixer(gltf.scene);
         const clips = gltf.animations;
-        const clip = THREE.AnimationClip.findByName(clips, 'walk1');
+        const clip = THREE.AnimationClip.findByName(clips, "mixamo.com");
         const action = mixer.clipAction(clip);
-        drawPath(map, data, randcolor);
         action.play();
-        scene.add(gltf.scene);  
-      }
-    );
-  }
+        drawPath(map, data, randcolor);
+        scene.add(gltf.scene);
+      });
+    } else if (activity === "running") {
+      loader = new GLTFLoader();
+      const source = "./models/run.glb";
+      loader.load(source, (gltf) => {
+        gltf.scene.scale.set(5, 5, 5);
+        gltf.scene.rotation.x = (90 * Math.PI) / 180; // rotations are in radians
+
+        mixer = new THREE.AnimationMixer(gltf.scene);
+        const clips = gltf.animations;
+        const clip = THREE.AnimationClip.findByName(clips, "mixamo.com");
+        const action = mixer.clipAction(clip);
+        // console.log(clips);
+        action.play();
+
+scene.add(gltf.scene);
+      });
+    } else if (activity === "driving") {
+      loader = new GLTFLoader();
+      const source = "./models/alfa_romeo_stradale_1967.glb";
+      loader.load(source, (gltf) => {
+        gltf.scene.scale.set(30, 30, 30);
+        gltf.scene.rotation.x = (90 * Math.PI) / 180; // rotations are in radians
+
+        scene.add(gltf.scene);
+      });
+    } else if (activity === "cycling") {
+      loader = new GLTFLoader();
+      const source = "./models/jo_on_bike.glb";
+      loader.load(source, (gltf) => {
+        gltf.scene.scale.set(5, 5, 5);
+        gltf.scene.rotation.x = (90 * Math.PI) / 180; // rotations are in radians
+
+        mixer = new THREE.AnimationMixer(gltf.scene);
+        const clips = gltf.animations;
+        const clip = THREE.AnimationClip.findByName(clips, "M_rig_Action_S");
+        const action = mixer.clipAction(clip);
+        // console.log(clips);
+        action.play();
+
+        scene.add(gltf.scene);
+      });
+    } else if (activity === "swimming") {
+      loader = new GLTFLoader();
+      const source = "./models/swimming_ool.glb";
+      loader.load(source, (gltf) => {
+        gltf.scene.scale.set(5, 5, 5);
+        gltf.scene.rotation.x = (90 * Math.PI) / 180; // rotations are in radians
+
+        mixer = new THREE.AnimationMixer(gltf.scene);
+        const clips = gltf.animations;
+        const clip = THREE.AnimationClip.findByName(clips, "mixamo.com");
+        const action = mixer.clipAction(clip);
+        // console.log(clips);
+        action.play();
+
+        scene.add(gltf.scene);
+      });
+    }
+
+    // ------
+    scene.add(sphere);
+    // ------
+  };
   
   webGLOverlayView.onContextRestored = ({gl}) => {    
     renderer = new THREE.WebGLRenderer({
@@ -105,21 +179,32 @@ function initWebGLOverlayView(map) {
 
   const ease = (t) => (t<0.5 ? 2*t*t : -1+(4-2*t)*t);
   const lerp = (a,b,t) => (a+(b-a)*t);
-
+  var idx = 0;
   webGLOverlayView.onDraw = ({gl, transformer}) => {
-    if (data.length == 1) {
-      latLngAltitudeLiteral = {
-        lat: data[0].Latitude,
-        lng: data[0].Longitude,
-        altitude: data[0].Altitude
-      };
-    } else {
-      if (i < data.length) {
-        newLat = lerp(a.Latitude, b.Latitude, ease(t));
-        newLng = lerp(a.Longitude, b.Longitude, ease(t));
-        newAlt = lerp(a.Altitude, b.Altitude, ease(t));
-  
-        t += dt;
+    sphere.scale.set(
+      (sphere.scale.x = data[idx]["Horizontal accuracy"]),
+      (sphere.scale.y = data[idx]["Vertical accuracy"]),
+      (sphere.scale.z = data[idx]["Horizontal accuracy"])
+    );
+    idx = idx < data.length - 1 ? idx + 1 : 0;
+    var newLat = lerp(a.Latitude, b.Latitude, ease(t));
+    var newLng = lerp(a.Longitude, b.Longitude, ease(t));
+    var newAlt = lerp(a.Altitude, b.Altitude, ease(t));
+
+    if (i < data.length) {
+      newLat = lerp(a.Latitude, b.Latitude, ease(t));
+      newLng = lerp(a.Longitude, b.Longitude, ease(t));
+      newAlt = lerp(a.Altitude, b.Altitude, ease(t));
+
+      t += dt;
+    }
+    
+    if ((newLat == b.Latitude) || (newLng == b.Longitude) || (newAlt == b.Altitude)) {
+      if (i < data.length - 1) {
+        i++;
+        t = 0;
+        a = data[i-1];
+        b = data[i];
       }
       
       if ((newLat == b.Latitude) || (newLng == b.Longitude) || (newAlt == b.Altitude)) {
